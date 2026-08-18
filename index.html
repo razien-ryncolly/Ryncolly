@@ -22,6 +22,23 @@
             --admin-color: #3b82f6;
         }
 
+        /* Color Themes */
+        body[data-theme="purple"] {
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --border-glow: rgba(168, 85, 247, 0.6);
+        }
+        body[data-theme="blue"] {
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --border-glow: rgba(59, 130, 246, 0.6);
+        }
+        body[data-theme="green"] {
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --border-glow: rgba(16, 185, 129, 0.6);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -59,6 +76,8 @@
             border-radius: 22px;
             animation: fadeIn 0.3s ease-out;
             box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .header-left {
@@ -111,6 +130,32 @@
             font-weight: 700;
         }
         .creator-tag span { color: var(--accent); }
+
+        /* HEADER RIGHT CONTROLS */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 18px;
+        }
+        .theme-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        .theme-dot:hover { transform: scale(1.2); }
 
         /* SIDEBAR */
         .sidebar-overlay {
@@ -174,8 +219,8 @@
         }
         .sidebar-item:hover i.icon-box { color: var(--accent); border-color: var(--border-glow); background: rgba(255, 42, 95, 0.15); }
 
-        /* AUTH */
-        .auth-section { display: flex; align-items: center; }
+        /* AUTH SECTION */
+        .auth-section { display: flex; align-items: center; gap: 8px; }
 
         .login-btn {
             display: flex; align-items: center; gap: 8px;
@@ -198,7 +243,7 @@
         .admin-dashboard-btn {
             display: none; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none;
             padding: 8px 14px; border-radius: 16px; font-size: 11px; font-weight: 700;
-            cursor: pointer; align-items: center; gap: 6px; margin-right: 8px;
+            cursor: pointer; align-items: center; gap: 6px;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
@@ -233,7 +278,7 @@
             transform: translateY(-50%); color: var(--text-dim); font-size: 14px;
         }
 
-        /* GRID E ANIMEVE (Imazh HD, tekst pak më i plotë) */
+        /* GRID */
         .container {
             max-width: 1250px;
             margin: 0 auto;
@@ -260,10 +305,9 @@
         .anime-card:hover {
             transform: translateY(-6px);
             border-color: var(--border-glow);
-            box-shadow: 0 16px 40px rgba(255, 42, 95, 0.2);
+            box-shadow: 0 16px 40px var(--accent-glow);
         }
 
-        /* Imazhi HD në krye të kartës */
         .card-cover {
             width: 100%;
             height: 220px;
@@ -276,8 +320,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Siguron cilësi maksimale të imazhit */
-            image-rendering: -webkit-optimize-contrast;
             transition: transform 0.4s ease;
         }
 
@@ -307,7 +349,6 @@
         .badge.rating { background: rgba(255, 215, 0, 0.15); color: #ffd700; border-color: rgba(255,215,0,0.3); }
         .badge.season { background: rgba(255, 42, 95, 0.2); color: var(--accent); border-color: var(--border-glow); }
 
-        /* Pjesa e tekstit - pak më e gjatë se më parë (3 rreshta) */
         .card-body {
             padding: 18px;
             display: flex;
@@ -332,7 +373,7 @@
             color: var(--text-dim);
             line-height: 1.6;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Tekst pak më i gjatë, tamam siç u kërkua */
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -432,16 +473,16 @@
                 <div class="sidebar-item-content"><i class="fas fa-tag icon-box"></i><span>Genres</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
-            <div class="sidebar-item" onclick="handleMenuClick('New Releases')">
-                <div class="sidebar-item-content"><i class="fas fa-star icon-box"></i><span>New Releases</span></div>
+            <div class="sidebar-item" onclick="handleMenuClick('Trending Today')">
+                <div class="sidebar-item-content"><i class="fas fa-fire icon-box"></i><span>Trending Today</span></div>
+                <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
+            </div>
+            <div class="sidebar-item" onclick="handleMenuClick('Watch History')">
+                <div class="sidebar-item-content"><i class="fas fa-history icon-box"></i><span>Watch History</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
             <div class="sidebar-item" onclick="handleMenuClick('Top Rated')">
                 <div class="sidebar-item-content"><i class="fas fa-trophy icon-box"></i><span>Top Rated</span></div>
-                <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
-            </div>
-            <div class="sidebar-item" onclick="handleMenuClick('Random Anime')">
-                <div class="sidebar-item-content"><i class="fas fa-random icon-box"></i><span>Random Anime</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
             <div class="sidebar-item" onclick="handleMenuClick('Status')">
@@ -470,6 +511,21 @@
             </div>
         </div>
 
+        <div class="header-right">
+            <!-- Feature 4: Color Themes Selector -->
+            <div class="theme-selector">
+                <div class="theme-dot" style="background:#ff2a5f;" onclick="setTheme('pink')" title="Neon Pink"></div>
+                <div class="theme-dot" style="background:#a855f7;" onclick="setTheme('purple')" title="Cyber Purple"></div>
+                <div class="theme-dot" style="background:#3b82f6;" onclick="setTheme('blue')" title="Electric Blue"></div>
+                <div class="theme-dot" style="background:#10b981;" onclick="setTheme('green')" title="Matrix Green"></div>
+            </div>
+
+            <!-- Feature 2: Quick Random Anime Button -->
+            <button class="menu-toggle-btn" onclick="openRandomAnime()" title="Random Anime">
+                <i class="fas fa-random"></i>
+            </button>
+        </div>
+
         <div class="auth-section">
             <button id="adminDashboardBtn" class="admin-dashboard-btn" onclick="openAdminPanel()">
                 <i class="fas fa-shield-alt"></i> Panel
@@ -496,7 +552,7 @@
     <div class="container" id="animeContainer"></div>
 
     <footer>
-        Ryncolly Engine v5.6 • Created by <span>Redi</span>
+        Ryncolly Engine v5.9 • Created by <span>Redi</span>
     </footer>
 
     <script>
@@ -511,9 +567,32 @@
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
+        // Feature 4: Theme handler
+        function setTheme(themeName) {
+            if (themeName === 'pink') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', themeName);
+            }
+            localStorage.setItem('ryncolly_theme', themeName);
+        }
+
+        // Feature 2: Quick Random Anime
+        function openRandomAnime() {
+            if(animeList.length > 0) {
+                const randomChoice = animeList[Math.floor(Math.random() * animeList.length)];
+                watchAnime(randomChoice.slug);
+            } else {
+                alert("Please wait for anime data to load!");
+            }
+        }
+
         function handleMenuClick(actionName) {
             toggleSidebar();
             if(actionName === 'Status') { showPublicStatus(); return; }
+            if(actionName === 'Trending Today') { searchAnimeFromAniList(""); return; }
+            if(actionName === 'Watch History') { showWatchHistoryModal(); return; }
+
             const modal = document.getElementById('actionModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
@@ -521,17 +600,38 @@
             
             switch(actionName) {
                 case 'Genres': modalBody.innerHTML = "Explore popular genres: Action, Adventure, Fantasy, Romance, Sci-Fi, Thriller."; break;
-                case 'New Releases': modalBody.innerHTML = "Check out newest episodes synchronized directly from anisakura.xyz updated in real-time."; break;
                 case 'Top Rated': modalBody.innerHTML = "Top-tier masterpieces ranked by global user reviews on AniList."; break;
-                case 'Random Anime':
-                    if(animeList.length > 0) {
-                        const randomChoice = animeList[Math.floor(Math.random() * animeList.length)];
-                        modalBody.innerHTML = `Recommended: <b>${randomChoice.title}</b><br><br>${randomChoice.desc}<br><br><button onclick="watchAnime('${randomChoice.slug}')" style="background:var(--accent); color:white; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Watch in Anisakura &rarr;</button>`;
-                    } else {
-                        modalBody.innerHTML = "Loading data...";
-                    }
-                    break;
                 default: modalBody.innerHTML = "Coming soon!";
+            }
+            modal.classList.add('active');
+        }
+
+        // Feature 3: Watch History Modal View
+        function showWatchHistoryModal() {
+            const modal = document.getElementById('actionModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.innerText = "Continue Watching (History)";
+            let history = JSON.parse(localStorage.getItem('ryncolly_history')) || [];
+
+            if(history.length === 0) {
+                modalBody.innerHTML = `<div style="text-align: center; color: var(--text-dim); padding: 20px;">No recently watched anime found.</div>`;
+            } else {
+                let html = `<div style="display: flex; flex-direction: column; gap: 10px;">`;
+                history.forEach(item => {
+                    html += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-hover); padding: 10px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="${item.cover}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+                                <span style="font-weight: 700; font-size: 13px; color: white;">${item.title}</span>
+                            </div>
+                            <button onclick="watchAnime('${item.slug}')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px;">Watch</button>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                modalBody.innerHTML = html;
             }
             modal.classList.add('active');
         }
@@ -633,7 +733,17 @@
             document.getElementById('actionModal').classList.remove('active');
         }
 
+        // Feature 3: Watch History Tracker & Player Launcher
         async function watchAnime(slugOrTitle) {
+            const anime = animeList.find(a => a.slug === slugOrTitle);
+            if (anime) {
+                let history = JSON.parse(localStorage.getItem('ryncolly_history')) || [];
+                history = history.filter(a => a.title !== anime.title);
+                history.unshift(anime);
+                if (history.length > 10) history.pop();
+                localStorage.setItem('ryncolly_history', JSON.stringify(history));
+            }
+
             const apiEndpoint = PROXY_BASE + "slug?title=" + encodeURIComponent(slugOrTitle);
             try {
                 const response = await fetch(apiEndpoint);
@@ -648,14 +758,17 @@
             }
         }
 
+        // Feature 1: Feature Trending Today sorting when search is empty
         async function searchAnimeFromAniList(searchQuery = "") {
             const container = document.getElementById('animeContainer');
             if(container) container.classList.add('loading'); 
 
+            const sortOption = searchQuery ? "[SEARCH_MATCH]" : "[TRENDING_DESC, POPULARITY_DESC]";
+
             const query = `
                 query ($search: String) {
                   Page (page: 1, perPage: 40) {
-                    media (type: ANIME, search: $search, sort: POPULARITY_DESC) {
+                    media (type: ANIME, search: $search, sort: ${sortOption}) {
                       title { english romaji }
                       averageScore
                       description
@@ -671,19 +784,30 @@
             const variables = searchQuery ? { search: searchQuery } : {};
 
             try {
-                const response = await fetch('https://graphql.anilist.co', {
+                const response = await fetch(PROXY_BASE + 'anilist', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json' 
+                    },
                     body: JSON.stringify({ query: query, variables: variables })
                 });
                 
-                const data = await response.json();
-                const rawMedia = data.data.Page.media;
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (!result.data || !result.data.Page) {
+                    throw new Error('Invalid structure returned from AniList API');
+                }
+
+                const rawMedia = result.data.Page.media;
 
                 animeList = rawMedia.map(item => {
-                    const title = item.title.english || item.title.romaji;
+                    const title = (item.title && (item.title.english || item.title.romaji)) ? (item.title.english || item.title.romaji) : "Unknown Title";
                     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    // Përdor imazh cilësor (extraLarge ose banner) për qartësi maksimale
                     const coverImg = (item.coverImage && item.coverImage.extraLarge) ? item.coverImage.extraLarge : (item.bannerImage || (item.coverImage ? item.coverImage.large : ''));
                     
                     return {
@@ -700,9 +824,10 @@
                 renderAnime(animeList);
                 
             } catch (error) {
+                console.error("AniList API Error:", error);
                 if(container) {
                     container.classList.remove('loading');
-                    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #ef4444;">Failed to connect to AniList API.</div>`;
+                    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #ef4444;">Failed to connect to AniList via proxy. Please check your worker script.</div>`;
                 }
             }
         }
@@ -804,6 +929,12 @@
         }
 
         window.onload = function() {
+            // Check saved theme on load
+            const savedTheme = localStorage.getItem('ryncolly_theme');
+            if (savedTheme && savedTheme !== 'pink') {
+                document.body.setAttribute('data-theme', savedTheme);
+            }
+
             searchAnimeFromAniList();
             if (window.google && window.google.accounts) {
                 google.accounts.id.initialize({
