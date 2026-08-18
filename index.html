@@ -22,23 +22,6 @@
             --admin-color: #3b82f6;
         }
 
-        /* Color Themes */
-        body[data-theme="purple"] {
-            --accent: #a855f7;
-            --accent-glow: rgba(168, 85, 247, 0.4);
-            --border-glow: rgba(168, 85, 247, 0.6);
-        }
-        body[data-theme="blue"] {
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --border-glow: rgba(59, 130, 246, 0.6);
-        }
-        body[data-theme="green"] {
-            --accent: #10b981;
-            --accent-glow: rgba(16, 185, 129, 0.4);
-            --border-glow: rgba(16, 185, 129, 0.6);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -76,8 +59,6 @@
             border-radius: 22px;
             animation: fadeIn 0.3s ease-out;
             box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-            flex-wrap: wrap;
-            gap: 12px;
         }
 
         .header-left {
@@ -130,32 +111,6 @@
             font-weight: 700;
         }
         .creator-tag span { color: var(--accent); }
-
-        /* HEADER RIGHT CONTROLS */
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .theme-selector {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            padding: 6px 10px;
-            border-radius: 18px;
-        }
-        .theme-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: transform 0.2s ease;
-        }
-        .theme-dot:hover { transform: scale(1.2); }
 
         /* SIDEBAR */
         .sidebar-overlay {
@@ -219,8 +174,8 @@
         }
         .sidebar-item:hover i.icon-box { color: var(--accent); border-color: var(--border-glow); background: rgba(255, 42, 95, 0.15); }
 
-        /* AUTH SECTION */
-        .auth-section { display: flex; align-items: center; gap: 8px; }
+        /* AUTH */
+        .auth-section { display: flex; align-items: center; }
 
         .login-btn {
             display: flex; align-items: center; gap: 8px;
@@ -243,7 +198,7 @@
         .admin-dashboard-btn {
             display: none; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none;
             padding: 8px 14px; border-radius: 16px; font-size: 11px; font-weight: 700;
-            cursor: pointer; align-items: center; gap: 6px;
+            cursor: pointer; align-items: center; gap: 6px; margin-right: 8px;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
@@ -305,7 +260,7 @@
         .anime-card:hover {
             transform: translateY(-6px);
             border-color: var(--border-glow);
-            box-shadow: 0 16px 40px var(--accent-glow);
+            box-shadow: 0 16px 40px rgba(255, 42, 95, 0.2);
         }
 
         .card-cover {
@@ -320,6 +275,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            image-rendering: -webkit-optimize-contrast;
             transition: transform 0.4s ease;
         }
 
@@ -473,16 +429,16 @@
                 <div class="sidebar-item-content"><i class="fas fa-tag icon-box"></i><span>Genres</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
-            <div class="sidebar-item" onclick="handleMenuClick('Trending Today')">
-                <div class="sidebar-item-content"><i class="fas fa-fire icon-box"></i><span>Trending Today</span></div>
-                <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
-            </div>
-            <div class="sidebar-item" onclick="handleMenuClick('Watch History')">
-                <div class="sidebar-item-content"><i class="fas fa-history icon-box"></i><span>Watch History</span></div>
+            <div class="sidebar-item" onclick="handleMenuClick('New Releases')">
+                <div class="sidebar-item-content"><i class="fas fa-star icon-box"></i><span>New Releases</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
             <div class="sidebar-item" onclick="handleMenuClick('Top Rated')">
                 <div class="sidebar-item-content"><i class="fas fa-trophy icon-box"></i><span>Top Rated</span></div>
+                <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
+            </div>
+            <div class="sidebar-item" onclick="handleMenuClick('Random Anime')">
+                <div class="sidebar-item-content"><i class="fas fa-random icon-box"></i><span>Random Anime</span></div>
                 <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.3;"></i>
             </div>
             <div class="sidebar-item" onclick="handleMenuClick('Status')">
@@ -511,21 +467,6 @@
             </div>
         </div>
 
-        <div class="header-right">
-            <!-- Feature 4: Color Themes Selector -->
-            <div class="theme-selector">
-                <div class="theme-dot" style="background:#ff2a5f;" onclick="setTheme('pink')" title="Neon Pink"></div>
-                <div class="theme-dot" style="background:#a855f7;" onclick="setTheme('purple')" title="Cyber Purple"></div>
-                <div class="theme-dot" style="background:#3b82f6;" onclick="setTheme('blue')" title="Electric Blue"></div>
-                <div class="theme-dot" style="background:#10b981;" onclick="setTheme('green')" title="Matrix Green"></div>
-            </div>
-
-            <!-- Feature 2: Quick Random Anime Button -->
-            <button class="menu-toggle-btn" onclick="openRandomAnime()" title="Random Anime">
-                <i class="fas fa-random"></i>
-            </button>
-        </div>
-
         <div class="auth-section">
             <button id="adminDashboardBtn" class="admin-dashboard-btn" onclick="openAdminPanel()">
                 <i class="fas fa-shield-alt"></i> Panel
@@ -552,7 +493,7 @@
     <div class="container" id="animeContainer"></div>
 
     <footer>
-        Ryncolly Engine v5.9 • Created by <span>Redi</span>
+        Ryncolly Engine v5.8 • Created by <span>Redi</span>
     </footer>
 
     <script>
@@ -567,32 +508,9 @@
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        // Feature 4: Theme handler
-        function setTheme(themeName) {
-            if (themeName === 'pink') {
-                document.body.removeAttribute('data-theme');
-            } else {
-                document.body.setAttribute('data-theme', themeName);
-            }
-            localStorage.setItem('ryncolly_theme', themeName);
-        }
-
-        // Feature 2: Quick Random Anime
-        function openRandomAnime() {
-            if(animeList.length > 0) {
-                const randomChoice = animeList[Math.floor(Math.random() * animeList.length)];
-                watchAnime(randomChoice.slug);
-            } else {
-                alert("Please wait for anime data to load!");
-            }
-        }
-
         function handleMenuClick(actionName) {
             toggleSidebar();
             if(actionName === 'Status') { showPublicStatus(); return; }
-            if(actionName === 'Trending Today') { searchAnimeFromAniList(""); return; }
-            if(actionName === 'Watch History') { showWatchHistoryModal(); return; }
-
             const modal = document.getElementById('actionModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
@@ -600,38 +518,17 @@
             
             switch(actionName) {
                 case 'Genres': modalBody.innerHTML = "Explore popular genres: Action, Adventure, Fantasy, Romance, Sci-Fi, Thriller."; break;
+                case 'New Releases': modalBody.innerHTML = "Check out newest episodes synchronized directly from anisakura.xyz updated in real-time."; break;
                 case 'Top Rated': modalBody.innerHTML = "Top-tier masterpieces ranked by global user reviews on AniList."; break;
+                case 'Random Anime':
+                    if(animeList.length > 0) {
+                        const randomChoice = animeList[Math.floor(Math.random() * animeList.length)];
+                        modalBody.innerHTML = `Recommended: <b>${randomChoice.title}</b><br><br>${randomChoice.desc}<br><br><button onclick="watchAnime('${randomChoice.slug}')" style="background:var(--accent); color:white; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Watch in Anisakura &rarr;</button>`;
+                    } else {
+                        modalBody.innerHTML = "Loading data...";
+                    }
+                    break;
                 default: modalBody.innerHTML = "Coming soon!";
-            }
-            modal.classList.add('active');
-        }
-
-        // Feature 3: Watch History Modal View
-        function showWatchHistoryModal() {
-            const modal = document.getElementById('actionModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalBody = document.getElementById('modalBody');
-
-            modalTitle.innerText = "Continue Watching (History)";
-            let history = JSON.parse(localStorage.getItem('ryncolly_history')) || [];
-
-            if(history.length === 0) {
-                modalBody.innerHTML = `<div style="text-align: center; color: var(--text-dim); padding: 20px;">No recently watched anime found.</div>`;
-            } else {
-                let html = `<div style="display: flex; flex-direction: column; gap: 10px;">`;
-                history.forEach(item => {
-                    html += `
-                        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-hover); padding: 10px; border-radius: 12px; border: 1px solid var(--border);">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <img src="${item.cover}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
-                                <span style="font-weight: 700; font-size: 13px; color: white;">${item.title}</span>
-                            </div>
-                            <button onclick="watchAnime('${item.slug}')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px;">Watch</button>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                modalBody.innerHTML = html;
             }
             modal.classList.add('active');
         }
@@ -733,17 +630,7 @@
             document.getElementById('actionModal').classList.remove('active');
         }
 
-        // Feature 3: Watch History Tracker & Player Launcher
         async function watchAnime(slugOrTitle) {
-            const anime = animeList.find(a => a.slug === slugOrTitle);
-            if (anime) {
-                let history = JSON.parse(localStorage.getItem('ryncolly_history')) || [];
-                history = history.filter(a => a.title !== anime.title);
-                history.unshift(anime);
-                if (history.length > 10) history.pop();
-                localStorage.setItem('ryncolly_history', JSON.stringify(history));
-            }
-
             const apiEndpoint = PROXY_BASE + "slug?title=" + encodeURIComponent(slugOrTitle);
             try {
                 const response = await fetch(apiEndpoint);
@@ -758,17 +645,15 @@
             }
         }
 
-        // Feature 1: Feature Trending Today sorting when search is empty
         async function searchAnimeFromAniList(searchQuery = "") {
             const container = document.getElementById('animeContainer');
             if(container) container.classList.add('loading'); 
 
-            const sortOption = searchQuery ? "[SEARCH_MATCH]" : "[TRENDING_DESC, POPULARITY_DESC]";
-
+            // Explicitly requesting type: ANIME to completely exclude manga
             const query = `
                 query ($search: String) {
                   Page (page: 1, perPage: 40) {
-                    media (type: ANIME, search: $search, sort: ${sortOption}) {
+                    media (type: ANIME, search: $search, sort: [TRENDING_DESC, POPULARITY_DESC]) {
                       title { english romaji }
                       averageScore
                       description
@@ -929,11 +814,6 @@
         }
 
         window.onload = function() {
-            const savedTheme = localStorage.getItem('ryncolly_theme');
-            if (savedTheme && savedTheme !== 'pink') {
-                document.body.setAttribute('data-theme', savedTheme);
-            }
-
             searchAnimeFromAniList();
             if (window.google && window.google.accounts) {
                 google.accounts.id.initialize({
@@ -947,3 +827,4 @@
     </script>
 </body>
 </html>
+
