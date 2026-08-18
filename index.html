@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ryncolly - Ultimate Anime Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #050508;
+            --bg-card: #0f0f18;
+            --bg-hover: #161624;
+            --accent: #ff2a5f;
+            --accent-glow: rgba(255, 42, 95, 0.4);
+            --text-main: #ffffff;
+            --text-dim: #9499b7;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(255, 42, 95, 0.6);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.4);
+        }
+
+        body[data-theme="purple"] {
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --border-glow: rgba(168, 85, 247, 0.6);
+        }
+        body[data-theme="blue"] {
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --border-glow: rgba(59, 130, 246, 0.6);
+        }
+        body[data-theme="green"] {
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --border-glow: rgba(16, 185, 129, 0.6);
+        }
+        body[data-theme="oled"] {
+            --bg-main: #000000;
+            --bg-card: #08080c;
+            --bg-hover: #12121a;
+            --border: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 16px;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            background: rgba(15, 15, 24, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-toggle-btn {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 16px;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .logo .ryn { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+        .logo .colly { color: var(--text-main); }
+        
+        .creator-tag {
+            color: var(--text-dim);
+            font-size: 9px;
+            margin-top: 1px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+        .creator-tag span { color: var(--accent); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-nav-btn {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .auth-nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 18px;
+        }
+        .theme-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        .theme-dot:hover { transform: scale(1.2); }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        .sidebar {
+            position: fixed;
+            top: 0; left: -320px; width: 290px; height: 100%;
+            background: rgba(12, 12, 20, 0.98);
+            border-right: 1px solid var(--border);
+            z-index: 1001;
+            display: flex; flex-direction: column;
+            transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            box-shadow: 30px 0 60px rgba(0,0,0,0.9);
+        }
+        .sidebar.active { left: 0; }
+
+        .sidebar-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-close-btn {
+            background: var(--bg-hover); border: 1px solid var(--border);
+            color: var(--text-dim); width: 38px; height: 38px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        .sidebar-menu {
+            padding: 18px 14px; display: flex; flex-direction: column; gap: 8px;
+        }
+
+        .sidebar-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 15px; color: var(--text-dim); background: transparent;
+            border: none; border-radius: 14px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.25s ease;
+        }
+        .sidebar-item-content { display: flex; align-items: center; gap: 14px; }
+        .sidebar-item i.icon-box {
+            font-size: 14px; width: 36px; height: 36px; border-radius: 12px;
+            background: var(--bg-hover); display: flex; align-items: center; justify-content: center;
+            color: var(--text-dim); border: 1px solid var(--border);
+        }
+        .sidebar-item:hover {
+            background: var(--bg-hover); color: var(--text-main); transform: translateX(4px);
+        }
+
+        .controls-bar {
+            width: 100%;
+            max-width: 1250px;
+            margin: 0 auto 12px auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 11px 16px 11px 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .search-box i {
+            position: absolute; left: 16px; top: 50%;
+            transform: translateY(-50%); color: var(--text-dim); font-size: 14px;
+        }
+
+        .random-btn {
+            background: linear-gradient(135deg, var(--accent), #ff4d79);
+            border: none;
+            color: white;
+            padding: 0 16px;
+            height: 43px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            transition: transform 0.2s ease;
+            white-space: nowrap;
+        }
+        .random-btn:hover { transform: translateY(-2px); }
+
+        /* Ultra-compact, single-line horizontal scroll filter bar to eliminate vertical clutter */
+        .filter-section {
+            max-width: 1250px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            white-space: nowrap;
+            align-items: center;
+        }
+        .filter-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-tab, .genre-tab, .dropdown-filter {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 7px 12px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 35px;
+        }
+        .filter-tab.active, .filter-tab:hover, .genre-tab.active, .genre-tab:hover, .dropdown-filter:focus, .dropdown-filter:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .dropdown-filter {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 28px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239499b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+        .dropdown-filter option {
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .status-page-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+        .status-header-block {
+            padding: 10px 4px 20px 4px;
+        }
+        .status-brand-title {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            margin-bottom: 14px;
+        }
+        .status-brand-title .ryn { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+        .status-main-state {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+        .state-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+        .state-big-text {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+        .state-update-time {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            padding: 0 4px;
+            margin-top: 5px;
+        }
+        .status-services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: border-color 0.2s;
+        }
+        .service-card:hover {
+            border-color: var(--border-glow);
+        }
+        .service-info-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .service-name-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .service-bar-indicator {
+            width: 3px;
+            height: 18px;
+            background: var(--success);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--success-glow);
+        }
+        .service-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .status-pill-text {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--success);
+            letter-spacing: 1px;
+        }
+
+        .profile-view-container {
+            max-width: 1250px;
+            margin: 0 auto 50px auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            display: none;
+        }
+        .profile-view-container.active {
+            display: block;
+        }
+
+        .profile-top-bar {
+            padding: 16px 25px 0 25px;
+            background: transparent;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            margin-top: 12px;
+        }
+
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+
+        .banner-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 60%;
+            background: linear-gradient(to bottom, transparent, var(--bg-card));
+        }
+
+        .profile-header-section {
+            padding: 0 35px 30px 35px;
+            position: relative;
+            margin-top: -60px;
+            z-index: 2;
+        }
+
+        .profile-user-info-flex {
+            display: flex;
+            align-items: flex-end;
+            gap: 25px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar-wrapper {
+            width: 115px;
+            height: 115px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+            overflow: hidden;
+            background: var(--bg-main);
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-text-details {
+            flex: 1;
+        }
+
+        .profile-username {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .profile-bio {
+            font-size: 13.5px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .edit-profile-btn {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            background: rgba(5, 5, 8, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            gap: 10px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .stat-num {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .stat-label {
+            font-size: 10.5px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .profile-tabs-nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .p-tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-dim);
+            padding: 10px 22px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .p-tab-btn.active {
+            background: linear-gradient(135deg, var(--accent), #ff4d79);
+            color: white;
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .p-tab-btn:hover:not(.active) {
+            background: var(--bg-hover);
+            color: var(--text-main);
+            border-color: var(--border);
+        }
+
+        .profile-content-grid {
+            padding: 30px 35px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+        .file-upload-label {
+            display: block;
+            width: 100%;
+            background: var(--bg-hover);
+            border: 1px dashed var(--border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: var(--text-dim);
+            font-size: 13px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-label:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+            background: var(--bg-card);
+        }
+        .avatar-preview-thumb {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--accent);
+            display: none;
+            margin-top: 8px;
+        }
+        .banner-preview-thumb {
+            width: 100%;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--accent);
+            display: none;
+            margin-top: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 410px;
+        }
+        .skeleton-cover {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-hover) 50%, var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        .skeleton-line {
+            height: 16px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-hover) 50%, var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.long { width: 100%; height: 35px; margin-top: auto; border-radius: 14px; }
+
+        .anime-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: 0 16px 40px var(--accent-glow);
+        }
+
+        .card-cover {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            background: #11111a;
+            overflow: hidden;
+        }
+
+        .card-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .card-cover img {
+            transform: scale(1.06);
+        }
+
+        .card-badges-absolute {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .badge {
+            background: rgba(12, 12, 18, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-dim);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 9px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+        }
+        .badge.rating { background: rgba(255, 215, 0, 0.15); color: #ffd700; border-color: rgba(255,215,0,0.3); }
+        .badge.season { background: rgba(255, 42, 95, 0.2); color: var(--accent); border-color: var(--border-glow); }
+
+        .bookmark-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(12, 12, 18, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+        }
+        .bookmark-btn:hover, .bookmark-btn.active {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(255, 42, 95, 0.2);
+        }
+
+        .card-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .anime-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anime-desc {
+            font-size: 12.5px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anisakura-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent), #ff4d79);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 12.5px;
+            font-weight: 700;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            margin-top: auto;
+            transition: opacity 0.2s;
+        }
+        .anisakura-btn:hover { opacity: 0.9; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.8);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .modal-close {
+            position: absolute;
+            top: 18px; right: 18px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10;
+        }
+        .modal-close:hover { color: var(--text-main); border-color: var(--accent); }
+
+        .modal-header-flex {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .modal-poster {
+            width: 140px;
+            height: 200px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .modal-info {
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .modal-meta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .modal-genres {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .genre-pill {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+        
+        .modal-detailed-section {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .modal-detailed-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-desc-full {
+            font-size: 13.5px;
+            color: var(--text-main);
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .personal-note-box {
+            margin-bottom: 20px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        .personal-note-box textarea {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            padding: 10px 14px;
+            font-size: 13px;
+            outline: none;
+            resize: vertical;
+            min-height: 70px;
+            margin-top: 8px;
+            transition: border-color 0.2s;
+        }
+        .personal-note-box textarea:focus {
+            border-color: var(--accent);
+        }
+        .note-save-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        .note-save-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+
+        .auth-form-group {
+            margin-bottom: 16px;
+        }
+        .auth-form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .auth-form-group input {
+            width: 100%;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .auth-form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+        .auth-submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), #ff4d79);
+            border: none;
+            color: white;
+            padding: 13px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            transition: opacity 0.2s;
+            margin-top: 6px;
+        }
+        .auth-submit-btn:hover { opacity: 0.9; }
+        .auth-switch-text {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 16px;
+        }
+        .auth-switch-text span {
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .auth-switch-text span:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center; padding: 35px 10px 15px; color: var(--text-dim);
+            font-size: 10.5px; border-top: 1px solid var(--border); margin-top: 40px;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+        }
+        footer span { color: var(--accent); font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="appSidebar">
+        <div class="sidebar-header">
+            <div class="logo"><span class="ryn">RYN</span><span class="colly">COLLY</span></div>
+            <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="toggleSidebar(); switchTab('explore')">
+                <div class="sidebar-item-content"><i class="fas fa-compass icon-box"></i><span>Explore All</span></div>
+            </div>
+            <div class="sidebar-item" onclick="toggleSidebar(); switchTab('trending')">
+                <div class="sidebar-item-content"><i class="fas fa-fire icon-box"></i><span>Trending Today</span></div>
+            </div>
+            <div class="sidebar-item" onclick="toggleSidebar(); switchTab('watchlist')">
+                <div class="sidebar-item-content"><i class="fas fa-bookmark icon-box"></i><span>My Watchlist</span></div>
+            </div>
+            <div class="sidebar-item" onclick="toggleSidebar(); switchTab('statuspage')">
+                <div class="sidebar-item-content"><i class="fas fa-server icon-box"></i><span>Status Page</span></div>
+            </div>
+            <div class="sidebar-item" onclick="toggleSidebar(); switchTab('profile')">
+                <div class="sidebar-item-content"><i class="fas fa-user icon-box"></i><span>My Profile</span></div>
+            </div>
+            <div class="sidebar-item" onclick="toggleSidebar(); openRandomAnime()">
+                <div class="sidebar-item-content"><i class="fas fa-random icon-box"></i><span>Random Anime</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="animeModal" onclick="closeModal(event)">
+        <div class="modal-content" id="modalContentBox">
+            <button class="modal-close" onclick="closeModalDirect()"><i class="fas fa-times"></i></button>
+            <div id="modalBodyInner"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <button class="menu-toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <div class="logo-container">
+                <div class="logo"><span class="ryn">RYN</span><span class="colly">COLLY</span></div>
+                <div class="creator-tag">Created by <span>Redi</span></div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div id="authHeaderContainer"></div>
+            <div class="theme-selector">
+                <div class="theme-dot" style="background:#ff2a5f;" onclick="setTheme('pink')" title="Pink"></div>
+                <div class="theme-dot" style="background:#a855f7;" onclick="setTheme('purple')" title="Purple"></div>
+                <div class="theme-dot" style="background:#3b82f6;" onclick="setTheme('blue')" title="Blue"></div>
+                <div class="theme-dot" style="background:#10b981;" onclick="setTheme('green')" title="Green"></div>
+                <div class="theme-dot" style="background:#000000; border-color:#333;" onclick="setTheme('oled')" title="OLED Black"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="controls-bar" id="controlsBar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search anime..." onkeyup="filterAnime()">
+        </div>
+        <button class="random-btn" onclick="openRandomAnime()" title="Random Anime">
+            <i class="fas fa-dice"></i> Random
+        </button>
+    </div>
+
+    <!-- Ultra-Compact Single-Row Horizontal Scrolling Filter Bar -->
+    <div class="filter-section" id="filterSection">
+        <div class="filter-tab active" id="tab-explore" onclick="switchTab('explore')"><i class="fas fa-compass"></i> Explore</div>
+        <div class="filter-tab" id="tab-trending" onclick="switchTab('trending')"><i class="fas fa-fire"></i> Trending</div>
+        <div class="filter-tab" id="tab-watchlist" onclick="switchTab('watchlist')"><i class="fas fa-bookmark"></i> Watchlist</div>
+        <div class="filter-tab" id="tab-statuspage" onclick="switchTab('statuspage')"><i class="fas fa-server"></i> Status</div>
+        <div class="filter-tab" id="tab-profile" onclick="switchTab('profile')"><i class="fas fa-user"></i> Profile</div>
+        
+        <div class="genre-tab active" onclick="filterByGenre('All')">All Genres</div>
+        <div class="genre-tab" onclick="filterByGenre('Action')">Action</div>
+        <div class="genre-tab" onclick="filterByGenre('Romance')">Romance</div>
+        <div class="genre-tab" onclick="filterByGenre('Fantasy')">Fantasy</div>
+        <div class="genre-tab" onclick="filterByGenre('Adventure')">Adventure</div>
+        <div class="genre-tab" onclick="filterByGenre('Sci-Fi')">Sci-Fi</div>
+        <div class="genre-tab" onclick="filterByGenre('Drama')">Drama</div>
+
+        <select class="dropdown-filter" id="yearFilter" onchange="applyAdvancedFilters()">
+            <option value="All">All Years</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+        </select>
+        <select class="dropdown-filter" id="seasonFilter" onchange="applyAdvancedFilters()">
+            <option value="All">All Seasons</option>
+            <option value="WINTER">Winter</option>
+            <option value="SPRING">Spring</option>
+            <option value="SUMMER">Summer</option>
+            <option value="FALL">Fall</option>
+        </select>
+    </div>
+
+    <div class="profile-view-container" id="profileViewContainer">
+        <div class="profile-top-bar">
+            <button class="auth-nav-btn" onclick="switchTab('explore')">
+                <i class="fas fa-arrow-left"></i> Back to Explore
+            </button>
+        </div>
+        <div class="profile-banner">
+            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200&auto=format&fit=crop" alt="Profile Banner" id="profileBannerImg">
+            <div class="banner-overlay"></div>
+        </div>
+
+        <div class="profile-header-section">
+            <div class="profile-user-info-flex">
+                <div class="profile-avatar-wrapper">
+                    <img src="https://via.placeholder.com/150/111/ff2a5f?text=R" alt="Avatar" id="profileAvatarImg">
+                </div>
+                <div class="profile-text-details">
+                    <h1 class="profile-username" id="displayUsername">RAIZEN</h1>
+                    <p class="profile-bio" id="displayBio">You know the name<br>You don't know the story</p>
+                </div>
+                <button class="edit-profile-btn" onclick="openEditProfileModal()">
+                    <i class="fas fa-pen"></i> Edit Profile
+                </button>
+            </div>
+
+            <div class="profile-stats-grid">
+                <div class="stat-box">
+                    <span class="stat-num" id="statWatchlistCount">0</span>
+                    <span class="stat-label">Watchlist</span>
+                </div>
+            </div>
+
+            <div class="profile-tabs-nav">
+                <button class="p-tab-btn active" onclick="switchProfileTab('watching')">Watching</button>
+                <button class="p-tab-btn" onclick="switchProfileTab('plan')">Plan to Watch</button>
+                <button class="p-tab-btn" onclick="switchProfileTab('badges')">Badges</button>
+                <button class="p-tab-btn" onclick="switchProfileTab('wall')">Wall</button>
+            </div>
+        </div>
+
+        <div class="profile-content-grid" id="profileContentGrid"></div>
+    </div>
+
+    <div class="container" id="animeContainer"></div>
+
+    <footer>
+        Ryncolly Engine v7.5 • Created by <span>Redi</span>
+    </footer>
+
+    <script>
+        const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
+        let animeList = [];
+        let trendingList = [];
+        let currentTab = 'explore';
+        let currentGenre = 'All';
+        let currentYear = 'All';
+        let currentSeason = 'All';
+
+        let tempAvatarBase64 = '';
+        let tempBannerBase64 = '';
+
+        function toggleSidebar() {
+            document.getElementById('appSidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function setTheme(themeName) {
+            if (themeName === 'pink') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', themeName);
+            }
+            localStorage.setItem('ryncolly_theme', themeName);
+        }
+
+        function getRegisteredUsers() {
+            try { return JSON.parse(localStorage.getItem('ryncolly_users')) || []; } catch(e) { return []; }
+        }
+
+        function getCurrentUser() {
+            try { return JSON.parse(localStorage.getItem('ryncolly_current_user')) || null; } catch(e) { return null; }
+        }
+
+        function setCurrentUser(user) {
+            if(user) {
+                localStorage.setItem('ryncolly_current_user', JSON.stringify(user));
+            } else {
+                localStorage.removeItem('ryncolly_current_user');
+            }
+            updateAuthHeader();
+            loadProfileFromUser();
+        }
+
+        function loadProfileFromUser() {
+            const user = getCurrentUser();
+            if(user) {
+                if(user.username) document.getElementById('displayUsername').innerText = user.username;
+                if(user.bio) document.getElementById('displayBio').innerHTML = user.bio.replace(/\n/g, '<br>');
+                if(user.avatar) document.getElementById('profileAvatarImg').src = user.avatar;
+                if(user.banner) document.getElementById('profileBannerImg').src = user.banner;
+            }
+        }
+
+        function updateAuthHeader() {
+            const container = document.getElementById('authHeaderContainer');
+            if(!container) return;
+            const user = getCurrentUser();
+            if(user) {
+                container.innerHTML = `
+                    <button class="auth-nav-btn" onclick="logoutUser()">
+                        <i class="fas fa-user-circle" style="color:var(--accent);"></i> ${user.username} <i class="fas fa-sign-out-alt" style="margin-left:4px; opacity:0.7;"></i>
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="auth-nav-btn" onclick="openLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                `;
+            }
+        }
+
+        function openLoginModal() {
+            const modalBody = document.getElementById('modalBodyInner');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="logo" style="font-size: 24px; margin-bottom: 4px;"><span class="ryn">RYN</span><span class="colly">COLLY</span></div>
+                    <p style="font-size: 13px; color: var(--text-dim);">Sign in to access your account</p>
+                </div>
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="auth-form-group">
+                        <label>Username</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your username" required autocomplete="username">
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Login</button>
+                </form>
+                <div class="auth-switch-text">
+                    Don't have an account? <span onclick="openRegisterModal()">Register</span>
+                </div>
+            `;
+            document.getElementById('animeModal').classList.add('active');
+        }
+
+        function openRegisterModal() {
+            const modalBody = document.getElementById('modalBodyInner');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="logo" style="font-size: 24px; margin-bottom: 4px;"><span class="ryn">RYN</span><span class="colly">COLLY</span></div>
+                    <p style="font-size: 13px; color: var(--text-dim);">Create a new account</p>
+                </div>
+                <form onsubmit="handleRegisterSubmit(event)">
+                    <div class="auth-form-group">
+                        <label>Username</label>
+                        <input type="text" id="regUsername" placeholder="Choose a username" required autocomplete="username">
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Password</label>
+                        <input type="password" id="regPassword" placeholder="Choose a password" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Register</button>
+                </form>
+                <div class="auth-switch-text">
+                    Already have an account? <span onclick="openLoginModal()">Login</span>
+                </div>
+            `;
+            document.getElementById('animeModal').classList.add('active');
+        }
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const users = getRegisteredUsers();
+            const matchedUser = users.find(u => u.username === username && u.password === password);
+            
+            if(matchedUser) {
+                setCurrentUser(matchedUser);
+                closeModalDirect();
+                alert(`Welcome back, ${matchedUser.username}!`);
+            } else {
+                alert('Invalid username or password!');
+            }
+        }
+
+        function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if(username.length < 3) {
+                alert('Username must be at least 3 characters long.');
+                return;
+            }
+            if(password.length < 4) {
+                alert('Password must be at least 4 characters long.');
+                return;
+            }
+
+            let users = getRegisteredUsers();
+            const usernameExists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
+
+            if(usernameExists) {
+                alert('This username is already taken! Please choose another one.');
+                return;
+            }
+
+            const newUser = { username, password, bio: "You know the name\nYou don't know the story", avatar: "", banner: "" };
+            users.push(newUser);
+            localStorage.setItem('ryncolly_users', JSON.stringify(users));
+            
+            setCurrentUser(newUser);
+            closeModalDirect();
+            alert(`Account created successfully! Welcome, ${username}!`);
+        }
+
+        function logoutUser() {
+            if(confirm('Are you sure you want to log out?')) {
+                setCurrentUser(null);
+                alert('Logged out successfully.');
+            }
+        }
+
+        function getStorageData(key) {
+            try { return JSON.parse(localStorage.getItem(key)) || []; } catch(e) { return []; }
+        }
+
+        function setStorageData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function isBookmarked(title) {
+            return getStorageData('ryncolly_watchlist').some(item => item.title === title);
+        }
+
+        function getPersonalNote(title) {
+            let notes = getStorageData('ryncolly_notes');
+            let found = notes.find(n => n.title === title);
+            return found ? found.note : '';
+        }
+
+        function savePersonalNote(title) {
+            const textarea = document.getElementById('personalNoteInput');
+            if(!textarea) return;
+            const noteText = textarea.value.trim();
+            let notes = getStorageData('ryncolly_notes');
+            notes = notes.filter(n => n.title !== title);
+            if(noteText) {
+                notes.push({ title: title, note: noteText });
+            }
+            setStorageData('ryncolly_notes', notes);
+            alert('Personal note saved successfully!');
+        }
+
+        function toggleBookmark(event, animeStr) {
+            event.stopPropagation();
+            const anime = JSON.parse(decodeURIComponent(animeStr));
+            let watchlist = getStorageData('ryncolly_watchlist');
+            
+            if (isBookmarked(anime.title)) {
+                watchlist = watchlist.filter(item => item.title !== anime.title);
+            } else {
+                watchlist.unshift(anime);
+            }
+            setStorageData('ryncolly_watchlist', watchlist);
+            if(currentTab === 'watchlist') switchTab('watchlist');
+            else renderCurrentData();
+        }
+
+        async function watchAnime(title) {
+            const cleanTitle = title.trim();
+            const slug = cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            const primaryUrl = `https://anisakura.xyz/watch/${slug}`;
+            window.open(primaryUrl, '_blank');
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            const activeTabEl = document.getElementById('tab-' + tabName);
+            if(activeTabEl) activeTabEl.classList.add('active');
+
+            const animeContainer = document.getElementById('animeContainer');
+            const profileContainer = document.getElementById('profileViewContainer');
+            const controlsBar = document.getElementById('controlsBar');
+            const filterSection = document.getElementById('filterSection');
+
+            if(tabName === 'profile') {
+                animeContainer.style.display = 'none';
+                controlsBar.style.display = 'none';
+                if(filterSection) filterSection.style.display = 'none';
+                profileContainer.classList.add('active');
+                loadProfileData();
+            } else if(tabName === 'statuspage') {
+                profileContainer.classList.remove('active');
+                animeContainer.style.display = 'flex';
+                animeContainer.style.flexDirection = 'column';
+                controlsBar.style.display = 'none';
+                if(filterSection) filterSection.style.display = 'none';
+                renderStatusPage();
+            } else {
+                profileContainer.classList.remove('active');
+                animeContainer.style.display = 'grid';
+                animeContainer.style.flexDirection = 'unset';
+                controlsBar.style.display = 'flex';
+                if(filterSection) filterSection.style.display = 'flex';
+                renderCurrentData();
+            }
+        }
+
+        function filterByGenre(genre) {
+            currentGenre = genre;
+            document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
+            if (typeof event !== 'undefined' && event && event.target) {
+                event.target.classList.add('active');
+            }
+            renderCurrentData();
+        }
+
+        function applyAdvancedFilters() {
+            currentYear = document.getElementById('yearFilter').value;
+            currentSeason = document.getElementById('seasonFilter').value;
+            renderCurrentData();
+        }
+
+        function renderCurrentData() {
+            if(currentTab === 'profile' || currentTab === 'statuspage') return;
+            let data = [];
+            if(currentTab === 'explore') data = animeList;
+            else if(currentTab === 'trending') {
+                if(trendingList.length === 0) { fetchTrendingAnime(); return; }
+                data = trendingList;
+            }
+            else if(currentTab === 'watchlist') data = getStorageData('ryncolly_watchlist');
+
+            if(currentGenre !== 'All') {
+                data = data.filter(item => item.genres && item.genres.includes(currentGenre));
+            }
+            if(currentYear !== 'All') {
+                data = data.filter(item => item.seasonYear && item.seasonYear.toString() === currentYear);
+            }
+            if(currentSeason !== 'All') {
+                data = data.filter(item => item.season && item.season === currentSeason);
+            }
+            renderAnime(data, currentTab);
+        }
+
+        function renderStatusPage() {
+            const container = document.getElementById('animeContainer');
+            if(!container) return;
+            
+            container.innerHTML = `
+                <div class="status-page-wrapper">
+                    <div style="margin-bottom: 5px;">
+                        <button class="auth-nav-btn" onclick="switchTab('explore')">
+                            <i class="fas fa-arrow-left"></i> Back to Explore
+                        </button>
+                    </div>
+                    <div class="status-header-block">
+                        <div class="status-brand-title"><span class="ryn">RYN</span>COLLY <span style="color:var(--text-dim); font-weight:400;">SYSTEM STATUS</span></div>
+                        <div class="status-main-state">
+                            <div class="state-title-row">
+                                <span class="status-indicator-dot"></span>
+                                <span class="state-big-text">Operational</span>
+                            </div>
+                            <div class="state-update-time">
+                                <span style="color:var(--success);">●</span> Updated just now
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-section-header">
+                        <span>SERVICES</span>
+                        <span>4/4 up</span>
+                    </div>
+                    <div class="status-services-list">
+                        <div class="service-card">
+                            <div class="service-info-row">
+                                <div class="service-name-wrap">
+                                    <div class="service-bar-indicator"></div>
+                                    <span class="service-name">AniList GraphQL API</span>
+                                </div>
+                                <span class="status-pill-text">OPERATIONAL</span>
+                            </div>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-info-row">
+                                <div class="service-name-wrap">
+                                    <div class="service-bar-indicator"></div>
+                                    <span class="service-name">Anisakura Video Player Gateway</span>
+                                </div>
+                                <span class="status-pill-text">OPERATIONAL</span>
+                            </div>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-info-row">
+                                <div class="service-name-wrap">
+                                    <div class="service-bar-indicator"></div>
+                                    <span class="service-name">Cloudflare Worker Edge Host</span>
+                                </div>
+                                <span class="status-pill-text">OPERATIONAL</span>
+                            </div>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-info-row">
+                                <div class="service-name-wrap">
+                                    <div class="service-bar-indicator"></div>
+                                    <span class="service-name">Local Storage & Watchlist Sync</span>
+                                </div>
+                                <span class="status-pill-text">OPERATIONAL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadProfileData() {
+            const watchlist = getStorageData('ryncolly_watchlist');
+            const statElement = document.getElementById('statWatchlistCount');
+            if(statElement) {
+                statElement.innerText = watchlist.length;
+            }
+            switchProfileTab('watching');
+        }
+
+        function switchProfileTab(tab) {
+            document.querySelectorAll('.p-tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (typeof event !== 'undefined' && event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                const buttons = document.querySelectorAll('.p-tab-btn');
+                if (tab === 'watching' && buttons[0]) buttons[0].classList.add('active');
+                else if (tab === 'plan' && buttons[1]) buttons[1].classList.add('active');
+                else if (tab === 'badges' && buttons[2]) buttons[2].classList.add('active');
+                else if (tab === 'wall' && buttons[3]) buttons[3].classList.add('active');
+            }
+            
+            const grid = document.getElementById('profileContentGrid');
+            if(tab === 'watching') {
+                const watchlist = getStorageData('ryncolly_watchlist');
+                renderProfileCards(watchlist, "No active anime in watchlist.");
+            } else if(tab === 'badges') {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-dim); padding:40px;">🏆 S-Class Legend & Wizard King Badges Unlocked!</div>`;
+            } else {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-dim); padding:40px;">Nothing here yet.</div>`;
+            }
+        }
+
+        function renderProfileCards(items, emptyMsg) {
+            const grid = document.getElementById('profileContentGrid');
+            grid.innerHTML = "";
+            if(!items || items.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-dim); padding:40px;">${emptyMsg}</div>`;
+                return;
+            }
+            items.forEach(anime => {
+                const animeJson = encodeURIComponent(JSON.stringify(anime));
+                grid.innerHTML += `
+                    <div class="anime-card" onclick="openModal('${animeJson}')">
+                        <div class="card-cover">
+                            <img src="${anime.cover}" alt="${anime.title}" loading="lazy">
+                            <div class="card-badges-absolute">
+                                <span class="badge rating"><i class="fas fa-star"></i> ${anime.rating}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="anime-title">${anime.title}</h3>
+                            <p class="anime-desc">${anime.desc}</p>
+                            <button onclick="event.stopPropagation(); watchAnime('${anime.title.replace(/'/g, "\\'")}')" class="anisakura-btn">
+                                <i class="fas fa-play"></i> Watch
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openEditProfileModal() {
+            const currentUser = getCurrentUser();
+            const username = currentUser ? currentUser.username : "RAIZEN";
+            const bioText = currentUser && currentUser.bio ? currentUser.bio : "You know the name\nYou don't know the story";
+            tempAvatarBase64 = currentUser && currentUser.avatar ? currentUser.avatar : '';
+            tempBannerBase64 = currentUser && currentUser.banner ? currentUser.banner : '';
+            
+            const modalBody = document.getElementById('modalBodyInner');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="logo" style="font-size: 22px; margin-bottom: 4px;"><span class="ryn">EDIT</span> <span class="colly">PROFILE</span></div>
+                    <p style="font-size: 12.5px; color: var(--text-dim);">Customize your account appearance</p>
+                </div>
+                <div class="auth-form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUsernameInput" value="${username}">
+                </div>
+                <div class="auth-form-group">
+                    <label>Bio / Status</label>
+                    <input type="text" id="editBioInput" value="${bioText}">
+                </div>
+                <div class="auth-form-group">
+                    <label>Avatar Image</label>
+                    <label for="editAvatarFile" class="file-upload-label" id="editAvatarLabel">Choose avatar from device...</label>
+                    <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarSelect(event)">
+                    <img id="editAvatarPreview" class="avatar-preview-thumb" src="${tempAvatarBase64}" alt="Avatar Preview" style="${tempAvatarBase64 ? 'display:block;' : ''}">
+                </div>
+                <div class="auth-form-group">
+                    <label>Banner Image</label>
+                    <label for="editBannerFile" class="file-upload-label" id="editBannerLabel">Choose banner from device...</label>
+                    <input type="file" id="editBannerFile" accept="image/*" onchange="handleBannerSelect(event)">
+                    <img id="editBannerPreview" class="banner-preview-thumb" src="${tempBannerBase64}" alt="Banner Preview" style="${tempBannerBase64 ? 'display:block;' : ''}">
+                </div>
+                <button onclick="saveProfileCustomization()" class="auth-submit-btn">Save Changes</button>
+            `;
+            document.getElementById('animeModal').classList.add('active');
+        }
+
+        function handleAvatarSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    tempAvatarBase64 = uploadEvent.target.result;
+                    document.getElementById('editAvatarLabel').innerText = file.name;
+                    const preview = document.getElementById('editAvatarPreview');
+                    preview.src = tempAvatarBase64;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleBannerSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    tempBannerBase64 = uploadEvent.target.result;
+                    document.getElementById('editBannerLabel').innerText = file.name;
+                    const preview = document.getElementById('editBannerPreview');
+                    preview.src = tempBannerBase64;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProfileCustomization() {
+            const newUsername = document.getElementById('editUsernameInput').value.trim();
+            const newBio = document.getElementById('editBioInput').value.trim();
+
+            let currentUser = getCurrentUser();
+            if(!currentUser) {
+                currentUser = { username: "RAIZEN", password: "" };
+            }
+
+            currentUser.username = newUsername || currentUser.username;
+            currentUser.bio = newBio;
+            if(tempAvatarBase64) currentUser.avatar = tempAvatarBase64;
+            if(tempBannerBase64) currentUser.banner = tempBannerBase64;
+
+            setCurrentUser(currentUser);
+
+            let users = getRegisteredUsers();
+            const index = users.findIndex(u => u.username === currentUser.username);
+            if(index !== -1) {
+                users[index] = currentUser;
+            } else {
+                users.push(currentUser);
+            }
+            localStorage.setItem('ryncolly_users', JSON.stringify(users));
+
+            loadProfileFromUser();
+            closeModalDirect();
+            alert('Profile updated and saved successfully!');
+        }
+
+        async function openRandomAnime() {
+            let pool = currentTab === 'trending' ? trendingList : animeList;
+            if(pool.length === 0) pool = animeList.length > 0 ? animeList : trendingList;
+            if(pool.length === 0) return;
+            const randomItem = pool[Math.floor(Math.random() * pool.length)];
+            if(randomItem) {
+                await watchAnime(randomItem.title);
+            }
+        }
+
+        function openModal(animeStr) {
+            const anime = JSON.parse(decodeURIComponent(animeStr));
+            const modalBody = document.getElementById('modalBodyInner');
+            const genresHtml = anime.genres ? anime.genres.map(g => `<span class="genre-pill">${g}</span>`).join('') : '';
+            const existingNote = getPersonalNote(anime.title);
+            
+            modalBody.innerHTML = `
+                <div class="modal-header-flex">
+                    <img src="${anime.cover}" class="modal-poster" alt="${anime.title}">
+                    <div class="modal-info">
+                        <h2 class="modal-title">${anime.title}</h2>
+                        <div class="modal-meta-row">
+                            <span class="badge rating"><i class="fas fa-star"></i> ${anime.rating}</span>
+                            <span class="badge season">${anime.seasons}</span>
+                            <span class="badge" style="background:var(--bg-hover); color:var(--text-main);">${anime.episodes || 'TV'} Eps</span>
+                        </div>
+                        <div class="modal-genres">${genresHtml}</div>
+                    </div>
+                </div>
+                <div class="personal-note-box">
+                    <div class="modal-detailed-title"><i class="fas fa-sticky-note"></i> Personal Note</div>
+                    <textarea id="personalNoteInput" placeholder="Add your private notes or review here...">${existingNote}</textarea>
+                    <button class="note-save-btn" onclick="savePersonalNote('${anime.title.replace(/'/g, "\\'")}')"><i class="fas fa-save"></i> Save Note</button>
+                </div>
+                <div class="modal-detailed-section">
+                    <div class="modal-detailed-title"><i class="fas fa-book-open"></i> Detailed Synopsis</div>
+                    <p class="modal-desc-full">${anime.desc}</p>
+                </div>
+                <button onclick="watchAnime('${anime.title.replace(/'/g, "\\'")}')" class="anisakura-btn">
+                    <i class="fas fa-play"></i> Watch in Anisakura
+                </button>
+            `;
+            document.getElementById('animeModal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if(event.target.id === 'animeModal') closeModalDirect();
+        }
+
+        function closeModalDirect() {
+            document.getElementById('animeModal').classList.remove('active');
+        }
+
+        function renderSkeletonLoaders() {
+            const container = document.getElementById('animeContainer');
+            if (!container) return;
+            let skeletonsHtml = '';
+            for(let i = 0; i < 8; i++) {
+                skeletonsHtml += `
+                    <div class="skeleton-card">
+                        <div class="skeleton-cover"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line long"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = skeletonsHtml;
+        }
+
+        async function fetchTrendingAnime() {
+            renderSkeletonLoaders();
+            const query = `
+                query {
+                    Page (perPage: 30) {
+                        media (sort: [TRENDING_DESC], type: ANIME) {
+                            id
+                            title { romaji english }
+                            coverImage { extraLarge large }
+                            averageScore
+                            episodes
+                            format
+                            description
+                            genres
+                            seasonYear
+                            season
+                        }
+                    }
+                }
+            `;
+            try {
+                const response = await fetch(ANILIST_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+                const result = await response.json();
+                const mediaList = result.data?.Page?.media || [];
+
+                trendingList = mediaList.map(item => {
+                    const title = item.title.english || item.title.romaji || "Unknown Title";
+                    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    return {
+                        title: title,
+                        seasons: item.format || "TV",
+                        episodes: item.episodes || "Ongoing",
+                        rating: item.averageScore ? (item.averageScore / 10).toFixed(1) : "N/A",
+                        desc: item.description ? item.description.replace(/<[^>]*>?/gm, '') : "No description available.",
+                        cover: item.coverImage?.extraLarge || item.coverImage?.large || '',
+                        genres: item.genres || [],
+                        seasonYear: item.seasonYear || null,
+                        season: item.season || null,
+                        slug: slug
+                    };
+                });
+                if(currentTab === 'trending') renderCurrentData();
+            } catch (error) {
+                console.error("Trending Fetch Error:", error);
+            }
+        }
+
+        async function searchAnimeFromAniList(searchQuery = "") {
+            renderSkeletonLoaders();
+            const query = `
+                query ($search: String) {
+                    Page (perPage: 30) {
+                        media (search: $search, type: ANIME, sort: [TRENDING_DESC, POPULARITY_DESC]) {
+                            id
+                            title { romaji english }
+                            coverImage { extraLarge large }
+                            averageScore
+                            episodes
+                            format
+                            description
+                            genres
+                            seasonYear
+                            season
+                        }
+                    }
+                }
+            `;
+            const variables = searchQuery ? { search: searchQuery } : { search: null };
+
+            try {
+                const response = await fetch(ANILIST_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ query: query, variables: variables })
+                });
+                const result = await response.json();
+                const mediaList = result.data?.Page?.media || [];
+
+                animeList = mediaList.map(item => {
+                    const title = item.title.english || item.title.romaji || "Unknown Title";
+                    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    return {
+                        title: title,
+                        seasons: item.format || "TV",
+                        episodes: item.episodes || "Ongoing",
+                        rating: item.averageScore ? (item.averageScore / 10).toFixed(1) : "N/A",
+                        desc: item.description ? item.description.replace(/<[^>]*>?/gm, '') : "No description available.",
+                        cover: item.coverImage?.extraLarge || item.coverImage?.large || '',
+                        genres: item.genres || [],
+                        seasonYear: item.seasonYear || null,
+                        season: item.season || null,
+                        slug: slug
+                    };
+                });
+
+                if(currentTab === 'explore') {
+                    renderCurrentData();
+                }
+            } catch (error) {
+                console.error("AniList API Error:", error);
+            }
+        }
+
+        let searchTimeout;
+        function filterAnime() {
+            clearTimeout(searchTimeout);
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+            const query = searchInput.value.trim();
+            if(query && currentTab !== 'explore') {
+                switchTab('explore');
+            }
+            searchTimeout = setTimeout(() => { searchAnimeFromAniList(query); }, 300);
+        }
+
+        function renderAnime(data, mode) {
+            const container = document.getElementById('animeContainer');
+            if (!container) return;
+            container.innerHTML = "";
+            
+            if(data.length === 0) {
+                let msg = 'No anime found.';
+                if(mode === 'watchlist') msg = 'Your watchlist is empty. Click the bookmark icon on any anime to save it!';
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">${msg}</div>`;
+                return;
+            }
+
+            data.forEach(anime => {
+                const animeJson = encodeURIComponent(JSON.stringify(anime));
+                const bookmarked = isBookmarked(anime.title);
+                
+                container.innerHTML += `
+                    <div class="anime-card" onclick="openModal('${animeJson}')">
+                        <div class="card-cover">
+                            <button class="bookmark-btn ${bookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${animeJson}')" title="Save to Watchlist">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            <img src="${anime.cover}" alt="${anime.title}" loading="lazy">
+                            <div class="card-badges-absolute">
+                                <span class="badge rating"><i class="fas fa-star"></i> ${anime.rating}</span>
+                                <span class="badge season">${anime.seasons}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="anime-title">${anime.title}</h3>
+                            <p class="anime-desc">${anime.desc}</p>
+                            <button onclick="event.stopPropagation(); watchAnime('${anime.title.replace(/'/g, "\\'")}')" class="anisakura-btn">
+                                <i class="fas fa-play"></i> Watch in Anisakura
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('ryncolly_theme');
+            if (savedTheme && savedTheme !== 'pink') {
+                document.body.setAttribute('data-theme', savedTheme);
+            }
+            updateAuthHeader();
+            loadProfileFromUser();
+            searchAnimeFromAniList();
+        }
+    </script>
+</body>
+</html>
